@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.github.ruifengx.skylandutils.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "skylandutils.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "DispenseBehaviourAccessor",
+    "MixinBucketItem",
+    "MixinEntity",
+    "MixinFlowingFluid",
+    "MixinFlowingFluidBlock",
+    "MixinFluidAttributesBuilder",
+    "MixinFluidBuilder",
+    "MixinFluidDeferredRegister",
+    "MixinLavaFluid",
+    "MixinSlimeFluid",
+    "MixinTinkerFluids",
+    "MixinWaterFluid"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "skyland-utils.unknown_lavalike_fluid": "未知的熔岩类流体",
+  "death.attack.lava_like": "%1$s试图在滚烫的%2$s里游泳",
+  "death.attack.lava_like.player": "%1$s在逃离%3$s时试图在滚烫的%2$s里游泳"
+}

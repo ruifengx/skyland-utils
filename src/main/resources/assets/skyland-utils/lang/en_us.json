@@ -1,0 +1,5 @@
+{
+  "skyland-utils.unknown_lavalike_fluid": "unknown lava-like fluid",
+  "death.attack.lava_like": "%1$s tried to swim in %2$s",
+  "death.attack.lava_like.player": "%1$s tried to swim in %2$s to escape %3$s"
+}
