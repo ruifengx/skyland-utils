@@ -1,5 +1,6 @@
 package com.github.ruifengx.skylandutils.fluid;
 
+import com.github.ruifengx.skylandutils.block.SkylandBlocks;
 import com.github.ruifengx.skylandutils.util.FluidOrBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,8 +20,14 @@ public class Interaction {
     public static final List<Interaction> ALL = new ArrayList<>();
 
     public static final Interaction netherrackGen = new Interaction(
-        TinkerFluids.blazingBlood.get(), TinkerFluids.blood.get(),
-        Blocks.NETHERRACK, null
+        FluidOrBlock.exact(TinkerFluids.blazingBlood.getFlowing()),
+        FluidOrBlock.from(TinkerFluids.blood.get()),
+        Blocks.NETHERRACK, FluidOrBlock.whatever()
+    );
+    public static final Interaction blazingBlockGen = new Interaction(
+        FluidOrBlock.exact(TinkerFluids.blazingBlood.getStill()),
+        FluidOrBlock.from(TinkerFluids.blood.get()),
+        SkylandBlocks.BLAZE_BLOCK.get(), FluidOrBlock.whatever()
     );
 
     private final Predicate<Fluid> sourceFluid;
@@ -36,20 +43,6 @@ public class Interaction {
         this.blockToGenerate = blockToGenerate;
         this.blockExpectedBelow = blockExpectedBelow;
         Interaction.ALL.add(this);
-    }
-
-    public Interaction(Fluid sourceFluid, Fluid targetFluid, Block blockToGenerate,
-                       @Nullable Block blockExpectedBelow) {
-        this(fluid -> fluid.isEquivalentTo(sourceFluid),
-            FluidOrBlock.from(targetFluid), blockToGenerate,
-            block -> blockExpectedBelow == null || block.matchesBlock(blockExpectedBelow));
-    }
-
-    public Interaction(Fluid sourceFluid, Block targetBlock, Block blockToGenerate,
-                       @Nullable Block blockExpectedBelow) {
-        this(fluid -> fluid.isEquivalentTo(sourceFluid),
-            FluidOrBlock.from(targetBlock), blockToGenerate,
-            block -> blockExpectedBelow == null || block.matchesBlock(blockExpectedBelow));
     }
 
     public boolean matchWorldAt(World worldIn, BlockPos pos, Fluid thisFluid, UponGeneration uponGeneration) {

@@ -3,6 +3,7 @@ package com.github.ruifengx.skylandutils.mixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -25,7 +26,8 @@ public abstract class MixinFlowingFluidBlock {
     @Inject(method = "reactWithNeighbors", at = @At("HEAD"), cancellable = true)
     private void onReactWithNeighbors(World worldIn, BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
         for (Interaction interact : Interaction.ALL) {
-            boolean generated = interact.matchWorldAt(worldIn, pos, this.getFluid(), blockToGenerate -> {
+            final Fluid fluid = worldIn.getFluidState(pos).getFluid();
+            boolean generated = interact.matchWorldAt(worldIn, pos, fluid, blockToGenerate -> {
                 worldIn.setBlockState(pos, net.minecraftforge.event.ForgeEventFactory.fireFluidPlaceBlockEvent(
                     worldIn, pos, pos, blockToGenerate.getDefaultState()
                 ));
