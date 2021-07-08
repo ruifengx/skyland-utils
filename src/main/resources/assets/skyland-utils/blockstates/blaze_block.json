@@ -1,0 +1,78 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "skyland-utils:block/blaze_block"
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "x": 90
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "x": 180
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "x": 270
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 90
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 90,
+        "x": 90
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 90,
+        "x": 180
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 90,
+        "x": 270
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 180
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 180,
+        "x": 90
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 180,
+        "x": 180
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 180,
+        "x": 270
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 270
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 270,
+        "x": 90
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 270,
+        "x": 180
+      },
+      {
+        "model": "skyland-utils:block/blaze_block",
+        "y": 270,
+        "x": 270
+      }
+    ]
+  }
+}
