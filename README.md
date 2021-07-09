@@ -1,6 +1,7 @@
 # Skyland Utils
 
 [![license](https://img.shields.io/badge/License-AGPL--v3.0-blueviolet)](https://www.gnu.org/licenses/agpl-3.0.html)
+[![Build](https://github.com/ruifengx/skyland-utils/actions/workflows/gradle.yaml/badge.svg)](https://github.com/ruifengx/skyland-utils/actions/workflows/gradle.yaml)
 ![version](https://img.shields.io/badge/WIP-0.1-yellow)
 
 Utilities for survival on skylands with [Create 0.3](https://github.com/Creators-of-Create/Create) and [Tinker's Construct 3](https://github.com/SlimeKnights/TinkersConstruct).
