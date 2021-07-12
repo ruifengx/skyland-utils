@@ -171,7 +171,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "skylandutils",
+            "Specification-Title": "skyland-utils",
             "Specification-Vendor": "ruifengx",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,

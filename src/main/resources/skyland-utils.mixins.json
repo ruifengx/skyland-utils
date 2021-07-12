@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.github.ruifengx.skylandutils.mixin",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "skylandutils.refmap.json",
+  "refmap": "skyland-utils.refmap.json",
   "injectors": {
     "defaultRequire": 1
   },
