@@ -1,0 +1,15 @@
+{
+  "replace": "false",
+  "values": [
+    "#minecraft:lava",
+    "#tconstruct:seared_stone",
+    "#tconstruct:scorched_stone",
+    "#tconstruct:molten_clay",
+    "#tconstruct:molten_glass",
+    "#tconstruct:liquid_soul",
+    "#tconstruct:molten_porcelain",
+    "#tconstruct:molten_obsidian",
+    "#tconstruct:molten_ender",
+    "#tconstruct:blazing_blood"
+  ]
+}
