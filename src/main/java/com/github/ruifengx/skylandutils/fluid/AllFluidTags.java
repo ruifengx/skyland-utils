@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Random;
 
 public enum AllFluidTags implements ITag.INamedTag<Fluid> {
+    ULTRAWARM,      // more active in ultrawarm world
+    VAPORIZING,     // whether this fluid should vaporize in ultrawarm worlds
+
     ALLOW_SWIMMING, // controls swimming and fall damage cancellation
     EXTINGUISHING,  // extinguishes fires on entities
     SCALDING,       // serves as damage source of high temperature
@@ -19,8 +22,9 @@ public enum AllFluidTags implements ITag.INamedTag<Fluid> {
 
     private final ITag.INamedTag<Fluid> tag;
 
-    AllFluidTags() {
-        this.tag = FluidTags.makeWrapperTag(SkylandUtils.MODID + ":" + this.name().toLowerCase());
+    AllFluidTags() { this(SkylandUtils.MODID); }
+    AllFluidTags(String modId) {
+        this.tag = FluidTags.makeWrapperTag(modId + ":" + this.name().toLowerCase());
     }
 
     @Override @NotNull public ResourceLocation getName() { return this.tag.getName(); }

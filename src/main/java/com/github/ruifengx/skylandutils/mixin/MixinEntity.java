@@ -40,11 +40,15 @@ public abstract class MixinEntity {
     // override entity behaviour related tags:
     // - vanilla LAVA => SCALDING
     // - vanilla WATER => ALLOW_SWIMMING
+    private static ITag<Fluid> replaceTag(ITag<Fluid> tag) {
+        if (tag == FluidTags.WATER) return AllFluidTags.ALLOW_SWIMMING;
+        if (tag == FluidTags.LAVA) return AllFluidTags.SCALDING;
+        return tag;
+    }
+
     @Inject(method = "func_233571_b_", at = @At("HEAD"), cancellable = true)
     void getEyesFluidLevel(ITag<Fluid> tag, CallbackInfoReturnable<Double> cir) {
-        if (tag == FluidTags.WATER) tag = AllFluidTags.ALLOW_SWIMMING;
-        if (tag == FluidTags.LAVA) tag = AllFluidTags.SCALDING;
-        cir.setReturnValue(this.eyesFluidLevel.getDouble(tag));
+        cir.setReturnValue(this.eyesFluidLevel.getDouble(replaceTag(tag)));
     }
 
     // handle SWIMMING fluids
@@ -58,12 +62,12 @@ public abstract class MixinEntity {
 
     @Inject(method = "areEyesInFluid", at = @At("HEAD"), cancellable = true)
     void onAreEyesInFluid(ITag<Fluid> tagIn, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(this.eyesFluid.isIn(tagIn));
+        cir.setReturnValue(this.eyesFluid.isIn(replaceTag(tagIn)));
     }
 
     @Redirect(method = "updateWaterState", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC,
         target = "Lnet/minecraft/tags/FluidTags;WATER:Lnet/minecraft/tags/ITag$INamedTag;"))
-    ITag.INamedTag<Fluid> getAllowSwimming() {
+    ITag.INamedTag<Fluid> onUpdateSwimmingState() {
         return AllFluidTags.ALLOW_SWIMMING;
     }
 

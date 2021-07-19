@@ -13,6 +13,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -61,7 +62,6 @@ public class SkylandUtils {
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
         LOGGER.info("Interation count: {}", Interaction.ALL.size());
-        FluidUtil.registerAllBuckets();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -84,12 +84,13 @@ public class SkylandUtils {
             collect(Collectors.toList()));
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) { }
+    public void onTagsUpdated(final TagsUpdatedEvent event) {
+        FluidUtil.registerAllBuckets();
+    }
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
+    // You can use EventBusSubscriber to automatically subscribe events on the contained class
+    // (this is subscribing to the MOD Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent

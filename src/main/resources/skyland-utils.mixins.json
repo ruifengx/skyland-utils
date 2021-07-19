@@ -9,16 +9,12 @@
   },
   "mixins": [
     "DispenseBehaviourAccessor",
+    "FlowingFluidAccessor",
     "MixinBucketItem",
     "MixinEntity",
-    "MixinFlowingFluid",
     "MixinFlowingFluidBlock",
-    "MixinFluidAttributesBuilder",
-    "MixinFluidBuilder",
-    "MixinFluidDeferredRegister",
+    "MixinForgeFlowingFluid",
     "MixinLavaFluid",
-    "MixinSlimeFluid",
-    "MixinTinkerFluids",
     "MixinWaterFluid"
   ]
 }

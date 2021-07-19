@@ -1,6 +1,8 @@
 package com.github.ruifengx.skylandutils.util;
 
+import com.github.ruifengx.skylandutils.item.AllItemTags;
 import com.github.ruifengx.skylandutils.mixin.DispenseBehaviourAccessor;
+import com.github.ruifengx.skylandutils.mixin.FlowingFluidAccessor;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.dispenser.IDispenseItemBehavior;
 import net.minecraft.fluid.FlowingFluid;
@@ -23,28 +25,22 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public final class FluidUtil {
-    public interface FluidBuilderAccessor {
-        Supplier<? extends Item> getBucketItem();
-    }
-
     private static final IDispenseItemBehavior dispenseBucketBehaviour
         = DispenseBehaviourAccessor.getDispenseBehaviourRegistry().get(Items.WATER_BUCKET);
 
-    private static final List<Supplier<BucketItem>> ALL_BUCKETS = new ArrayList<>();
-
-    public static void registerBucketForDispenser(Supplier<BucketItem> bucket) { ALL_BUCKETS.add(bucket); }
-    public static void registerAllBuckets() {
-        for (Supplier<BucketItem> bucket : ALL_BUCKETS)
-            DispenserBlock.registerDispenseBehavior(bucket.get(), dispenseBucketBehaviour);
+    public static boolean hasDispenseBehaviour(Item item) {
+        return DispenseBehaviourAccessor.getDispenseBehaviourRegistry().containsKey(item);
     }
 
-    public static Supplier<BucketItem> getBucket(FluidBuilder builder) {
-        return (() -> (BucketItem) ((FluidBuilderAccessor) builder).getBucketItem().get());
+    public static void registerAllBuckets() {
+        for (Item bucket : AllItemTags.BUCKETS.getAllElements())
+            if (!FluidUtil.hasDispenseBehaviour(bucket))
+                DispenserBlock.registerDispenseBehavior(bucket, dispenseBucketBehaviour);
     }
 
     public static int getLevelDecreasePerBlock(FluidState fluidState, IWorldReader world) {
         if (fluidState.getFluid() instanceof FlowingFluid) {
-            return ((IFlowingFluidAccessor) fluidState.getFluid()).levelDecreasePerBlock(world);
+            return ((FlowingFluidAccessor) fluidState.getFluid()).levelDecreasePerBlock(world);
         }
         return 1;
     }
