@@ -1,5 +1,5 @@
 {
-  "type": "skyland-utils:fluid-interation",
+  "type": "skyland-utils:fluid_interation",
   "consume": "tconstruct:flowing_blazing_blood",
   "env": [
     {"fluid": "#tconstruct:blood"}

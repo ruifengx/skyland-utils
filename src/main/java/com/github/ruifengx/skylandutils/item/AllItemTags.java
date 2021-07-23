@@ -18,14 +18,14 @@ public enum AllItemTags implements ITag.INamedTag<Item> {
 
     AllItemTags() { this(SkylandUtils.MODID); }
     AllItemTags(String modId) {
-        this.tag = ItemTags.makeWrapperTag(modId + ":" + this.name().toLowerCase());
+        this.tag = ItemTags.bind(modId + ":" + this.name().toLowerCase());
     }
 
     public static void register() {}
 
     @Override @NotNull public ResourceLocation getName() { return this.tag.getName(); }
     @Override public boolean contains(@NotNull Item element) { return this.tag.contains(element); }
-    @Override @NotNull public List<Item> getAllElements() { return this.tag.getAllElements(); }
+    @Override @NotNull public List<Item> getValues() { return this.tag.getValues(); }
     @Override @NotNull public Item getRandomElement(@NotNull Random random) {
         return this.tag.getRandomElement(random);
     }

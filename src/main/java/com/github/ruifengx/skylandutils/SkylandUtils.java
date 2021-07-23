@@ -74,7 +74,7 @@ public class SkylandUtils {
             SkylandBlocks.BLOCKS.getEntries().stream()
                 .map(RegistryObject::get)
                 .forEach(block -> {
-                    final Item.Properties properties = new Item.Properties().group(SkylandItemGroups.SKYLAND_GROUP);
+                    final Item.Properties properties = new Item.Properties().tab(SkylandItemGroups.SKYLAND_GROUP);
                     final BlockItem blockItem = new BlockItem(block, properties);
                     blockItem.setRegistryName(Objects.requireNonNull(block.getRegistryName()));
                     registry.register(blockItem);

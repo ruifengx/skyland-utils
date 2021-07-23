@@ -36,7 +36,7 @@ minecraft {
     //
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20210309-1.16.5'
+    mappings channel: 'official', version: '1.16.5'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -135,7 +135,7 @@ mixin {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven { // Mantle and TConstruct
+    maven { // JEI, Mantle and TConstruct
         name 'DVS1 Maven FS'
         url 'https://dvs1.progwml6.com/files/maven'
     }
@@ -158,21 +158,22 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.24'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.0'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
-    compile 'org.jetbrains:annotations:16.0.2'
+    implementation 'org.jetbrains:annotations:16.0.2'
 
     // Real examples
     // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-    compile fg.deobf('slimeknights.mantle:Mantle:1.16.5-1.6.109')
-    compile fg.deobf('slimeknights.tconstruct:TConstruct:1.16.5-3.0.4.214')
-    compile fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.1.1.25")
-    compile fg.deobf('curse.maven:create-328085:3386319')
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.0.107")
+    implementation fg.deobf('slimeknights.mantle:Mantle:1.16.5-1.6.115')
+    implementation fg.deobf('slimeknights.tconstruct:TConstruct:1.16.5-3.1.0.231')
+    implementation fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.1.1.27")
+    implementation fg.deobf('curse.maven:create-328085:3386319')
+    compileOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.1.111:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:7.7.1.111")
     runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.2.3-forge")
 
     // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
@@ -185,7 +186,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.3:processor'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

@@ -1,5 +1,6 @@
 package com.github.ruifengx.skylandutils.fluid;
 
+import com.github.ruifengx.skylandutils.SkylandUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.util.DamageSource;
@@ -14,19 +15,19 @@ public class ScaldingDamage extends DamageSource {
 
     public ScaldingDamage(Fluid sourceFluid) {
         super("scalding");
-        this.setFireDamage();
+        this.setIsFire();
         this.sourceFluid = sourceFluid;
     }
 
     @Override
-    public @NotNull ITextComponent getDeathMessage(@NotNull LivingEntity entityLivingBaseIn) {
-        LivingEntity livingentity = entityLivingBaseIn.getAttackingEntity();
+    public @NotNull ITextComponent getLocalizedDeathMessage(@NotNull LivingEntity entityLivingBaseIn) {
+        LivingEntity livingentity = entityLivingBaseIn.getLastHurtByMob();
         final String msgIdRaw = "death.attack.scalding";
         final String msgIdPlayer = msgIdRaw + ".player";
         final ResourceLocation fluidRegName = this.sourceFluid.getRegistryName();
         final ITextComponent fluidName = new TranslationTextComponent(fluidRegName == null
-            ? "skyland-utils.unknown_scalding_fluid"
-            : Util.makeTranslationKey("fluid", this.sourceFluid.getRegistryName()));
+            ? SkylandUtils.MODID + ".unknown_scalding_fluid"
+            : Util.makeDescriptionId("fluid", this.sourceFluid.getRegistryName()));
         if (livingentity != null) {
             return new TranslationTextComponent(msgIdPlayer,
                 entityLivingBaseIn.getDisplayName(),

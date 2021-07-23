@@ -15,9 +15,9 @@ public abstract class MixinBucketItem {
     @Shadow(remap = false)
     public abstract Fluid getFluid();
 
-    @Redirect(method = "tryPlaceContainedLiquid", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC,
+    @Redirect(method = "emptyBucket", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC,
         target = "Lnet/minecraft/tags/FluidTags;WATER:Lnet/minecraft/tags/ITag$INamedTag;"))
-    ITag.INamedTag<Fluid> getVaporizingFluids() {
+    ITag.INamedTag<Fluid> handleEmptyVaporizingBucket() {
         return AllFluidTags.VAPORIZING;
     }
 }

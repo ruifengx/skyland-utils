@@ -14,9 +14,9 @@ public final class SkylandBlocks {
         = DeferredRegister.create(ForgeRegistries.BLOCKS, SkylandUtils.MODID);
 
     public static final RegistryObject<Block> BLAZE_BLOCK = BLOCKS.register("blaze_block",
-        () -> new BlazeBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.GOLD)
-            .setRequiresTool().setLightLevel((state) -> 15)
-            .hardnessAndResistance(0.5F)
-            .setAllowsSpawn((state, reader, pos, entity) -> entity.isImmuneToFire())
-            .setEmmisiveRendering((state, world, pos) -> true)));
+        () -> new BlazeBlock(AbstractBlock.Properties.of(Material.STONE, MaterialColor.GOLD)
+            .requiresCorrectToolForDrops().lightLevel((state) -> 15)
+            .strength(0.5F)
+            .isValidSpawn((state, reader, pos, entity) -> entity.fireImmune())
+            .emissiveRendering((state, world, pos) -> true)));
 }

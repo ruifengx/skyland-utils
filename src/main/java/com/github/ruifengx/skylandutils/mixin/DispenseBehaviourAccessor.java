@@ -10,8 +10,8 @@ import java.util.Map;
 
 @Mixin(DispenserBlock.class)
 public interface DispenseBehaviourAccessor {
-    @Accessor("DISPENSE_BEHAVIOR_REGISTRY")
-    static Map<Item, IDispenseItemBehavior> getDispenseBehaviourRegistry() {
-        throw new RuntimeException("cannot access DISPENSE_BEHAVIOUR_REGISTRY");
+    @Accessor("DISPENSER_REGISTRY")
+    static Map<Item, IDispenseItemBehavior> getDispenserRegistry() {
+        throw new RuntimeException("cannot access DISPENSER_REGISTRY");
     }
 }

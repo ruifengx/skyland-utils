@@ -14,11 +14,11 @@ public class BlazeBlock extends Block {
     public BlazeBlock(AbstractBlock.Properties properties) { super(properties); }
 
     @Override
-    public void onEntityWalk(@NotNull World worldIn, @NotNull BlockPos pos, Entity entityIn) {
-        if (!entityIn.isImmuneToFire() && entityIn instanceof LivingEntity &&
+    public void stepOn(@NotNull World worldIn, @NotNull BlockPos pos, Entity entityIn) {
+        if (!entityIn.fireImmune() && entityIn instanceof LivingEntity &&
             !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
-            entityIn.attackEntityFrom(DamageSource.HOT_FLOOR, 1.0F);
+            entityIn.hurt(DamageSource.HOT_FLOOR, 1.0F);
         }
-        super.onEntityWalk(worldIn, pos, entityIn);
+        super.stepOn(worldIn, pos, entityIn);
     }
 }

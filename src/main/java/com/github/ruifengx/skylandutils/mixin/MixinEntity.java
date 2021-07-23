@@ -27,11 +27,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity {
-    @Shadow public abstract boolean handleFluidAcceleration(ITag<Fluid> fluidTag, double motionScale);
-    @Shadow public abstract void extinguish();
+    @Shadow public abstract boolean updateFluidHeightAndDoFluidPushing(ITag<Fluid> fluidTag, double motionScale);
+    @Shadow public abstract void clearFire();
 
-    @Shadow protected Object2DoubleMap<ITag<Fluid>> eyesFluidLevel;
-    @Shadow public abstract void setFire(int seconds);
+    @Shadow protected Object2DoubleMap<ITag<Fluid>> fluidHeight;
+    @Shadow public abstract void setSecondsOnFire(int seconds);
 
     private Fluid eyesFluid = Fluids.EMPTY;
     private final Object2ObjectMap<ITag<Fluid>, Fluid> fluidsDetected
@@ -46,47 +46,48 @@ public abstract class MixinEntity {
         return tag;
     }
 
-    @Inject(method = "func_233571_b_", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getFluidHeight", at = @At("HEAD"), cancellable = true)
     void getEyesFluidLevel(ITag<Fluid> tag, CallbackInfoReturnable<Double> cir) {
-        cir.setReturnValue(this.eyesFluidLevel.getDouble(replaceTag(tag)));
+        cir.setReturnValue(this.fluidHeight.getDouble(replaceTag(tag)));
     }
 
     // handle SWIMMING fluids
 
-    @Inject(method = "updateEyesInWater", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/tags/FluidTags;getAllTags()Ljava/util/List;"),
+    @Inject(method = "updateFluidOnEyes", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/tags/FluidTags;getWrappers()Ljava/util/List;"),
         locals = LocalCapture.CAPTURE_FAILHARD)
     void onSetEyesFluid(CallbackInfo ci, double d0, Entity entity, BlockPos pos, FluidState state) {
-        this.eyesFluid = state.getFluid();
+        this.eyesFluid = state.getType();
     }
 
-    @Inject(method = "areEyesInFluid", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isEyeInFluid", at = @At("HEAD"), cancellable = true)
     void onAreEyesInFluid(ITag<Fluid> tagIn, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(this.eyesFluid.isIn(replaceTag(tagIn)));
+        cir.setReturnValue(this.eyesFluid.is(replaceTag(tagIn)));
     }
 
-    @Redirect(method = "updateWaterState", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC,
-        target = "Lnet/minecraft/tags/FluidTags;WATER:Lnet/minecraft/tags/ITag$INamedTag;"))
+    @Redirect(method = "updateInWaterStateAndDoWaterCurrentPushing",
+        at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC,
+            target = "Lnet/minecraft/tags/FluidTags;WATER:Lnet/minecraft/tags/ITag$INamedTag;"))
     ITag.INamedTag<Fluid> onUpdateSwimmingState() {
         return AllFluidTags.ALLOW_SWIMMING;
     }
 
     // handle EXTINGUISHING fluids
 
-    @Redirect(method = "updateWaterState", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/entity/Entity;extinguish()V"))
+    @Redirect(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/entity/Entity;clearFire()V"))
     void cancelExtinguish(Entity self) { }
 
-    @Inject(method = "updateWaterState", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/entity/Entity;handleFluidAcceleration(Lnet/minecraft/tags/ITag;D)Z"))
+    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/entity/Entity;updateFluidHeightAndDoFluidPushing(Lnet/minecraft/tags/ITag;D)Z"))
     void tryExtinguish(CallbackInfo ci) {
-        if (handleFluidAcceleration(AllFluidTags.EXTINGUISHING, 0))
-            this.extinguish();
+        if (updateFluidHeightAndDoFluidPushing(AllFluidTags.CLEAR_FIRE, 0))
+            this.clearFire();
     }
 
     // handle SCALDING & IGNITING fluids
 
-    @Inject(method = "handleFluidAcceleration", locals = LocalCapture.CAPTURE_FAILHARD,
+    @Inject(method = "updateFluidHeightAndDoFluidPushing", locals = LocalCapture.CAPTURE_FAILHARD,
         at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(DD)D"))
     void onFluidDetected(ITag<Fluid> fluidTag, double motionScale, CallbackInfoReturnable<Boolean> cir,
                          AxisAlignedBB bb, int xMin, int xMax, int yMin, int yMax, int zMin, int zMax,
@@ -94,14 +95,14 @@ public abstract class MixinEntity {
                          Vector3d velSum, int velCount, BlockPos.Mutable pos,
                          int x, int y, int z, FluidState state, double height) {
         if (height - bb.minY > maxHeight)
-            this.fluidsDetected.put(fluidTag, state.getFluid());
+            this.fluidsDetected.put(fluidTag, state.getType());
     }
 
-    @Redirect(method = "func_233566_aG_", at = @At(value = "INVOKE", target =
-        "Lnet/minecraft/entity/Entity;handleFluidAcceleration(Lnet/minecraft/tags/ITag;D)Z"))
+    @Redirect(method = "updateInWaterStateAndDoFluidPushing", at = @At(value = "INVOKE", target =
+        "Lnet/minecraft/entity/Entity;updateFluidHeightAndDoFluidPushing(Lnet/minecraft/tags/ITag;D)Z"))
     boolean onHandleLava(Entity entity, ITag<Fluid> fluidTag, double motionScale) {
-        return entity.handleFluidAcceleration(AllFluidTags.SCALDING, motionScale)
-            | entity.handleFluidAcceleration(AllFluidTags.IGNITING, 0);
+        return entity.updateFluidHeightAndDoFluidPushing(AllFluidTags.SCALDING, motionScale)
+            | entity.updateFluidHeightAndDoFluidPushing(AllFluidTags.IGNITING, 0);
     }
 
     @Redirect(method = "isInLava", at = @At(value = "INVOKE", remap = false, target =
@@ -110,15 +111,15 @@ public abstract class MixinEntity {
         return Math.max(map.getDouble(AllFluidTags.SCALDING), map.getDouble(AllFluidTags.IGNITING));
     }
 
-    boolean isInIgniting() { return this.eyesFluidLevel.getDouble(AllFluidTags.IGNITING) > 0; }
+    boolean isInIgniting() { return this.fluidHeight.getDouble(AllFluidTags.IGNITING) > 0; }
 
-    @Redirect(method = "setOnFireFromLava", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/entity/Entity;setFire(I)V"))
+    @Redirect(method = "lavaHurt", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/entity/Entity;setSecondsOnFire(I)V"))
     void trySetOnFire(Entity entity, int seconds) {
-        if (this.isInIgniting()) this.setFire(seconds);
+        if (this.isInIgniting()) this.setSecondsOnFire(seconds);
     }
 
-    @Redirect(method = "setOnFireFromLava", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC,
+    @Redirect(method = "lavaHurt", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC,
         target = "Lnet/minecraft/util/DamageSource;LAVA:Lnet/minecraft/util/DamageSource;"))
     DamageSource getDamageSource() {
         return new ScaldingDamage(this.fluidsDetected.get(AllFluidTags.SCALDING));

@@ -32,10 +32,10 @@ import java.util.function.Supplier;
 public class Interaction implements IRecipe<IInventory> {
     private final ResourceLocation id;
     public static final IRecipeType<Interaction> type
-        = IRecipeType.register(SkylandUtils.MODID + ":fluid-interation");
+        = IRecipeType.register(SkylandUtils.MODID + ":fluid_interation");
 
     public static List<Interaction> getAll(World world) {
-        return world.getRecipeManager().getRecipesForType(type);
+        return world.getRecipeManager().getAllRecipesFor(type);
     }
 
     public static class Serializer
@@ -45,10 +45,10 @@ public class Interaction implements IRecipe<IInventory> {
 
         static {
             INSTANCE = new Serializer();
-            INSTANCE.setRegistryName("skyland-utils", "fluid-interation");
+            INSTANCE.setRegistryName(SkylandUtils.MODID, "fluid_interation");
         }
 
-        @Override public Interaction read(ResourceLocation recipeId, JsonObject json) {
+        @Override public Interaction fromJson(ResourceLocation recipeId, JsonObject json) {
             Ingredient consume = Ingredient.fluidFromId(json.get("consume").getAsString());
             List<Ingredient> env = new ArrayList<>();
             for (JsonElement envEntry : json.getAsJsonArray("env"))
@@ -63,34 +63,34 @@ public class Interaction implements IRecipe<IInventory> {
             return new Interaction(recipeId, consume, env, generate, below);
         }
 
-        @Nullable @Override public Interaction read(ResourceLocation recipeId, PacketBuffer buffer) {
+        @Nullable @Override public Interaction fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
             Ingredient consume = Ingredient.FlatStructure.readBuffer(buffer).recover();
             List<Ingredient> env = new ArrayList<>();
             int n = buffer.readVarInt();
             for (int i = 0; i < n; ++i)
                 env.add(Ingredient.FlatStructure.readBuffer(buffer).recover());
-            Block generate = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(buffer.readString()));
+            Block generate = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(buffer.readUtf()));
             Ingredient below = Ingredient.FlatStructure.readBuffer(buffer).recover();
             return new Interaction(recipeId, consume, env, generate, below);
         }
 
-        @Override public void write(PacketBuffer buffer, Interaction recipe) {
+        @Override public void toNetwork(PacketBuffer buffer, Interaction recipe) {
             recipe.sourceFluid.make_flat().writeBuffer(buffer);
             buffer.writeVarInt(recipe.target.size());
             for (Ingredient target : recipe.target) target.make_flat().writeBuffer(buffer);
-            buffer.writeString(recipe.blockToGenerate.getRegistryName().toString());
+            buffer.writeUtf(recipe.blockToGenerate.getRegistryName().toString());
             recipe.blockExpectedBelow.make_flat().writeBuffer(buffer);
         }
     }
 
     @Override public boolean matches(IInventory inv, World worldIn) { return false; }
-    @Override public ItemStack getCraftingResult(IInventory inv) { return ItemStack.EMPTY; }
-    @Override public boolean canFit(int width, int height) { return true; }
-    @Override public ItemStack getRecipeOutput() { return ItemStack.EMPTY; }
+    @Override public ItemStack assemble(IInventory inv) { return ItemStack.EMPTY; }
+    @Override public boolean canCraftInDimensions(int width, int height) { return true; }
+    @Override public ItemStack getResultItem() { return ItemStack.EMPTY; }
     @Override public ResourceLocation getId() { return this.id; }
     @Override public IRecipeSerializer<?> getSerializer() { return Serializer.INSTANCE; }
     @Override public IRecipeType<?> getType() { return type; }
-    @Override public boolean isDynamic() { return true; }
+    @Override public boolean isSpecial() { return true; }
 
     private final Ingredient sourceFluid;
     private final List<Ingredient> target;
@@ -116,17 +116,17 @@ public class Interaction implements IRecipe<IInventory> {
     public boolean matchWorldAt(World worldIn, BlockPos pos, Fluid thisFluid, UponGeneration uponGeneration) {
         if (this.sourceFluid.match(() -> thisFluid, INVALID_BLOCK)) {
             boolean belowFlag = this.blockExpectedBelow.match(INVALID_FLUID,
-                () -> worldIn.getBlockState(pos.down()).getBlock());
+                () -> worldIn.getBlockState(pos.below()).getBlock());
             int directionFlag = 0;
             target_loop:
             for (Ingredient target : this.target) {
                 for (Direction direction : Direction.values()) {
-                    final int bit = 1 << direction.getIndex();
+                    final int bit = 1 << direction.get3DDataValue();
                     if ((directionFlag & bit) == 0) {
                         if (direction != Direction.DOWN) {
-                            BlockPos neighbourPos = pos.offset(direction);
+                            BlockPos neighbourPos = pos.relative(direction);
                             if (belowFlag && target.match(
-                                () -> worldIn.getFluidState(neighbourPos).getFluid(),
+                                () -> worldIn.getFluidState(neighbourPos).getType(),
                                 () -> worldIn.getBlockState(neighbourPos).getBlock())) {
                                 directionFlag |= bit;
                                 continue target_loop;

@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WaterFluid.class)
 public abstract class MixinWaterFluid {
-    @Shadow public abstract boolean isEquivalentTo(Fluid fluidIn);
+    @Shadow public abstract boolean isSame(Fluid fluidIn);
 
-    @Inject(method = "canDisplace", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "canBeReplacedWith", at = @At("RETURN"), cancellable = true)
     protected void canDisplace(FluidState toState, IBlockReader world, BlockPos toPos, Fluid fromFluid,
                                Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(direction == Direction.DOWN && !isEquivalentTo(fromFluid)
-            || FluidUtil.canDisplace(toState, world, toPos, direction));
+        cir.setReturnValue(direction == Direction.DOWN && !isSame(fromFluid)
+            || FluidUtil.canBeReplacedWith(toState, world, toPos, direction));
     }
 }

@@ -13,16 +13,13 @@ public final class SkylandItemGroups {
         () -> new ItemStack(SkylandBlocks.BLAZE_BLOCK.get().asItem()));
 
     public static class SkylandGroup extends ItemGroup {
-        @NotNull
-        private final Supplier<ItemStack> iconSupplier;
+        @NotNull private final Supplier<ItemStack> iconSupplier;
 
         public SkylandGroup(@NotNull final String name, @NotNull final Supplier<ItemStack> iconSupplier) {
             super(name);
             this.iconSupplier = iconSupplier;
         }
 
-        @Override
-        @NotNull
-        public ItemStack createIcon() { return iconSupplier.get(); }
+        @Override @NotNull public ItemStack makeIcon() { return iconSupplier.get(); }
     }
 }

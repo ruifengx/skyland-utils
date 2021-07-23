@@ -44,7 +44,7 @@ modId = "forge" #mandatory
 mandatory = true #mandatory
 # The version range of the dependency
 versionRange = "[36,)" #mandatory
-# An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+# An ordering relationship for the dependency - AFTER or AFTER required if the relationship is not mandatory
 ordering = "NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
 side = "BOTH"
@@ -62,15 +62,20 @@ side = "BOTH"
 [[dependencies.skyland-utils]]
 modId = "mantle"
 mandatory = true
-# This version range declares a minimum of the current minecraft version up to but not including the next major version
 versionRange = "[1.6,)"
-ordering = "BEFORE"
+ordering = "AFTER"
 side = "BOTH"
 # Tinkers' Construct
 [[dependencies.skyland-utils]]
 modId = "tconstruct"
 mandatory = true
-# This version range declares a minimum of the current minecraft version up to but not including the next major version
 versionRange = "[3.0,)"
-ordering = "BEFORE"
+ordering = "AFTER"
+side = "BOTH"
+# Create
+[[dependencies.skyland-utils]]
+modId = "create"
+mandatory = true
+versionRange = "[v0.3.2b for 1.16.5,)"
+ordering = "AFTER"
 side = "BOTH"

@@ -18,20 +18,20 @@ import com.github.ruifengx.skylandutils.fluid.Interaction;
 @Mixin(FlowingFluidBlock.class)
 public abstract class MixinFlowingFluidBlock {
     @Shadow
-    private void triggerMixEffects(IWorld worldIn, BlockPos pos) {}
+    private void fizz(IWorld worldIn, BlockPos pos) {}
 
     @Shadow(remap = false)
     public abstract FlowingFluid getFluid();
 
-    @Inject(method = "reactWithNeighbors", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "shouldSpreadLiquid", at = @At("HEAD"), cancellable = true)
     private void onReactWithNeighbors(World worldIn, BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
         for (Interaction interact : Interaction.getAll(worldIn)) {
-            final Fluid fluid = worldIn.getFluidState(pos).getFluid();
+            final Fluid fluid = worldIn.getFluidState(pos).getType();
             boolean generated = interact.matchWorldAt(worldIn, pos, fluid, blockToGenerate -> {
-                worldIn.setBlockState(pos, net.minecraftforge.event.ForgeEventFactory.fireFluidPlaceBlockEvent(
-                    worldIn, pos, pos, blockToGenerate.getDefaultState()
+                worldIn.setBlockAndUpdate(pos, net.minecraftforge.event.ForgeEventFactory.fireFluidPlaceBlockEvent(
+                    worldIn, pos, pos, blockToGenerate.defaultBlockState()
                 ));
-                this.triggerMixEffects(worldIn, pos);
+                this.fizz(worldIn, pos);
             });
             if (generated) {
                 cir.setReturnValue(false);

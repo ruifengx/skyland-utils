@@ -3,12 +3,10 @@ package com.github.ruifengx.skylandutils.fluid;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
-import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -22,9 +20,9 @@ public interface Ingredient {
 
     static Ingredient fromId(IngredientCreator plain, IngredientCreator tag, String name) {
         ResourceLocation loc = name.startsWith("#")
-            ? ResourceLocation.tryCreate(name.substring(1))
-            : ResourceLocation.tryCreate(name);
-        if (loc == null) throw new JsonSyntaxException(MessageFormat.format("Invalid id: ''{0}''", name));
+            ? ResourceLocation.tryParse(name.substring(1))
+            : ResourceLocation.tryParse(name);
+        if (loc == null) throw new JsonSyntaxException(MessageFormat.format("Invalid id: ''{}''", name));
         return name.startsWith("#") ? tag.create(loc) : plain.create(loc);
     }
     static Ingredient fluidFromId(String name) { return fromId(Fluid::new, FluidTag::new, name); }
@@ -71,7 +69,7 @@ public interface Ingredient {
         public static FlatStructure readBuffer(PacketBuffer buffer) {
             boolean isWhatever = buffer.readBoolean();
             if (isWhatever) return whatever();
-            return normal(buffer.readBoolean(), buffer.readBoolean(), buffer.readString());
+            return normal(buffer.readBoolean(), buffer.readBoolean(), buffer.readUtf());
         }
 
         public void writeBuffer(PacketBuffer buffer) {
@@ -80,7 +78,7 @@ public interface Ingredient {
                 buffer.writeBoolean(this.isWhatever);
                 buffer.writeBoolean(this.isFluid);
                 buffer.writeBoolean(this.isTag);
-                buffer.writeString(this.asString);
+                buffer.writeUtf(this.asString);
             }
         }
 
@@ -126,14 +124,14 @@ public interface Ingredient {
         private final ITag.INamedTag<net.minecraft.fluid.Fluid> fluidTag;
         public FluidTag(ITag.INamedTag<net.minecraft.fluid.Fluid> fluidTag) { this.fluidTag = fluidTag; }
         public FluidTag(ResourceLocation fluidTag) {
-            this(Ingredient.getTagByName(FluidTags.getAllTags(), fluidTag));
+            this(Ingredient.getTagByName(FluidTags.getWrappers(), fluidTag));
         }
         @Override public FlatStructure make_flat() {
             return FlatStructure.normal(true, true, fluidTag.getName().toString());
         }
         @Override public boolean match(Supplier<net.minecraft.fluid.Fluid> fluid,
                                        Supplier<net.minecraft.block.Block> block) {
-            return fluid.get().isIn(this.fluidTag);
+            return fluid.get().is(this.fluidTag);
         }
     }
 
@@ -154,14 +152,14 @@ public interface Ingredient {
         private final ITag.INamedTag<net.minecraft.block.Block> blockTag;
         public BlockTag(ITag.INamedTag<net.minecraft.block.Block> blockTag) { this.blockTag = blockTag; }
         public BlockTag(ResourceLocation blockTag) {
-            this(Ingredient.getTagByName(BlockTags.getAllTags(), blockTag));
+            this(Ingredient.getTagByName(BlockTags.getWrappers(), blockTag));
         }
         @Override public FlatStructure make_flat() {
             return FlatStructure.normal(false, true, blockTag.getName().toString());
         }
         @Override public boolean match(Supplier<net.minecraft.fluid.Fluid> fluid,
                                        Supplier<net.minecraft.block.Block> block) {
-            return block.get().isIn(this.blockTag);
+            return block.get().is(this.blockTag);
         }
     }
 }
