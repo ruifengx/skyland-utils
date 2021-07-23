@@ -1,0 +1,8 @@
+{
+  "type": "skyland-utils:fluid-interation",
+  "consume": "tconstruct:blazing_blood",
+  "env": [
+    {"fluid": "#skyland-utils:extinguishing"}
+  ],
+  "generate": "skyland-utils:blaze_block"
+}

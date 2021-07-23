@@ -21,6 +21,8 @@ public enum AllItemTags implements ITag.INamedTag<Item> {
         this.tag = ItemTags.makeWrapperTag(modId + ":" + this.name().toLowerCase());
     }
 
+    public static void register() {}
+
     @Override @NotNull public ResourceLocation getName() { return this.tag.getName(); }
     @Override public boolean contains(@NotNull Item element) { return this.tag.contains(element); }
     @Override @NotNull public List<Item> getAllElements() { return this.tag.getAllElements(); }

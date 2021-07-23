@@ -1,7 +1,9 @@
 package com.github.ruifengx.skylandutils;
 
 import com.github.ruifengx.skylandutils.block.SkylandBlocks;
+import com.github.ruifengx.skylandutils.fluid.AllFluidTags;
 import com.github.ruifengx.skylandutils.fluid.Interaction;
+import com.github.ruifengx.skylandutils.item.AllItemTags;
 import com.github.ruifengx.skylandutils.item.SkylandItemGroups;
 import com.github.ruifengx.skylandutils.util.FluidUtil;
 import net.minecraft.block.Block;
@@ -9,8 +11,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
@@ -42,46 +46,14 @@ public class SkylandUtils {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public SkylandUtils() {
+        AllItemTags.register();
+        AllFluidTags.register();
+
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        // Register the setup method for modloading
-        modEventBus.addListener(this::setup);
-        // Register the enqueueIMC method for modloading
-        modEventBus.addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        modEventBus.addListener(this::processIMC);
-        // Register the doClientStuff method for modloading
-        modEventBus.addListener(this::doClientStuff);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         SkylandBlocks.BLOCKS.register(modEventBus);
-    }
-
-    private void setup(final FMLCommonSetupEvent event) {
-        // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-        LOGGER.info("Interation count: {}", Interaction.ALL.size());
-    }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
-    }
-
-    private void enqueueIMC(final InterModEnqueueEvent event) {
-        // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("skyland-utils", "helloworld", () -> {
-            LOGGER.info("Hello world from the MDK");
-            return "Hello world";
-        });
-    }
-
-    private void processIMC(final InterModProcessEvent event) {
-        // some example code to receive and process InterModComms from other mods
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-            map(m -> m.getMessageSupplier().get()).
-            collect(Collectors.toList()));
     }
 
     @SubscribeEvent
@@ -107,6 +79,11 @@ public class SkylandUtils {
                     blockItem.setRegistryName(Objects.requireNonNull(block.getRegistryName()));
                     registry.register(blockItem);
                 });
+        }
+
+        @SubscribeEvent
+        public static void onRecipeRegistry(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
+            event.getRegistry().register(Interaction.Serializer.INSTANCE);
         }
     }
 }

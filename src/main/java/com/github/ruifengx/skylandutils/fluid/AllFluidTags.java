@@ -27,6 +27,8 @@ public enum AllFluidTags implements ITag.INamedTag<Fluid> {
         this.tag = FluidTags.makeWrapperTag(modId + ":" + this.name().toLowerCase());
     }
 
+    public static void register() {}
+
     @Override @NotNull public ResourceLocation getName() { return this.tag.getName(); }
     @Override public boolean contains(@NotNull Fluid element) { return this.tag.contains(element); }
     @Override @NotNull public List<Fluid> getAllElements() { return this.tag.getAllElements(); }

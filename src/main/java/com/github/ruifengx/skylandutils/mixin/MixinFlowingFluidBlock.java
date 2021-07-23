@@ -25,7 +25,7 @@ public abstract class MixinFlowingFluidBlock {
 
     @Inject(method = "reactWithNeighbors", at = @At("HEAD"), cancellable = true)
     private void onReactWithNeighbors(World worldIn, BlockPos pos, BlockState state, CallbackInfoReturnable<Boolean> cir) {
-        for (Interaction interact : Interaction.ALL) {
+        for (Interaction interact : Interaction.getAll(worldIn)) {
             final Fluid fluid = worldIn.getFluidState(pos).getFluid();
             boolean generated = interact.matchWorldAt(worldIn, pos, fluid, blockToGenerate -> {
                 worldIn.setBlockState(pos, net.minecraftforge.event.ForgeEventFactory.fireFluidPlaceBlockEvent(

@@ -1,5 +1,6 @@
 {
-  "skyland-utils.unknown_scalding_fluid": "滚烫的未知流体",
+  "itemGroup.skyland-utils": "空岛实用拓展",
+  "skyland-utils.unknown_scalding_fluid": "未知流体",
   "death.attack.scalding": "%1$s试图在滚烫的%2$s里游泳",
   "death.attack.scalding.player": "%1$s在逃离%3$s时试图在滚烫的%2$s里游泳",
   "block.skyland-utils.blaze_block": "烈焰块"
