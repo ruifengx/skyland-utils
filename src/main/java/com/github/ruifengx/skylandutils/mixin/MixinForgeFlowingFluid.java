@@ -23,7 +23,13 @@ public abstract class MixinForgeFlowingFluid {
     }
 
     @Inject(method = "getSlopeFindDistance", at = @At("HEAD"), cancellable = true)
-    protected void onGetSlopeFindDistance(IWorldReader worldIn, CallbackInfoReturnable<Integer> cir) {
+    public void onGetSlopeFindDistance(IWorldReader worldIn, CallbackInfoReturnable<Integer> cir) {
+        if (((ForgeFlowingFluid) (Object) this).is(AllFluidTags.ULTRA_WARM))
+            cir.setReturnValue(worldIn.dimensionType().ultraWarm() ? 4 : 2);
+    }
+
+    @Inject(method = "getDropOff", at = @At("HEAD"), cancellable = true)
+    protected void onGetDropOff(IWorldReader worldIn, CallbackInfoReturnable<Integer> cir) {
         if (((ForgeFlowingFluid) (Object) this).is(AllFluidTags.ULTRA_WARM))
             cir.setReturnValue(worldIn.dimensionType().ultraWarm() ? 1 : 2);
     }
