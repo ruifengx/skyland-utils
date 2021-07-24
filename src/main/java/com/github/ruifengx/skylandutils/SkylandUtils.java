@@ -56,6 +56,10 @@ public class SkylandUtils {
         SkylandBlocks.BLOCKS.register(modEventBus);
     }
 
+    public static ResourceLocation getResource(String name) {
+        return new ResourceLocation(MODID, name);
+    }
+
     @SubscribeEvent
     public void onTagsUpdated(final TagsUpdatedEvent event) {
         FluidUtil.registerAllBuckets();

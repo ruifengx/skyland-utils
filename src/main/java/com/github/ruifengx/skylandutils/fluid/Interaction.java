@@ -1,6 +1,7 @@
 package com.github.ruifengx.skylandutils.fluid;
 
 import com.github.ruifengx.skylandutils.SkylandUtils;
+import com.github.ruifengx.skylandutils.util.BlockUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -8,6 +9,8 @@ import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -17,6 +20,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +63,7 @@ public class Interaction implements IRecipe<IInventory> {
             Block generate = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(jsonGenerate.getAsString()));
             if (generate == null) throw new JsonSyntaxException("Invalid 'generate' field.");
             Ingredient below = !json.has("below") ? Ingredient.WHATEVER
-                : Ingredient.fromElement(json.get("below"));
+                : Ingredient.blockFromId(json.get("below").getAsString());
             return new Interaction(recipeId, consume, env, generate, below);
         }
 
@@ -112,6 +116,60 @@ public class Interaction implements IRecipe<IInventory> {
 
     static final Supplier<Fluid> INVALID_FLUID = () -> { throw new RuntimeException("unreachable"); };
     static final Supplier<Block> INVALID_BLOCK = () -> { throw new RuntimeException("unreachable"); };
+
+    public List<FluidStack> getDisplaySourceFluid() { return this.sourceFluid.getAsFluids(); }
+    @Nullable List<List<FluidStack>> displayFluidInputs = null;
+    public List<List<FluidStack>> getDisplayFluidInputs() {
+        if (this.displayFluidInputs == null) {
+            this.displayFluidInputs = new ArrayList<>();
+            this.displayFluidInputs.add(this.sourceFluid.getAsFluids());
+            this.displayFluidInputs.addAll(getDisplayEnvFluids());
+        }
+        return this.displayFluidInputs;
+    }
+    @Nullable List<List<ItemStack>> displayBlockInputs = null;
+    public List<List<ItemStack>> getDisplayBlockInputs() {
+        if (this.displayBlockInputs == null) {
+            if (this.blockExpectedBelow instanceof Ingredient.Whatever)
+                this.displayBlockInputs = getDisplayEnvBlocks();
+            else {
+                this.displayBlockInputs = new ArrayList<>();
+                this.displayBlockInputs.add(this.blockExpectedBelow.getAsBlocks());
+                this.displayBlockInputs.addAll(getDisplayEnvBlocks());
+            }
+        }
+        return this.displayBlockInputs;
+    }
+    @Nullable List<List<FluidStack>> displayEnvFluids = null;
+    @Nullable List<List<ItemStack>> displayEnvBlocks = null;
+    private void updateDisplayEnv() {
+        this.displayEnvFluids = new ArrayList<>();
+        this.displayEnvBlocks = new ArrayList<>();
+        for (Ingredient target : this.target) {
+            if (target instanceof Ingredient.Whatever) continue;
+            if (target instanceof Ingredient.Fluid || target instanceof Ingredient.FluidTag)
+                this.displayEnvFluids.add(target.getAsFluids());
+            else
+                this.displayEnvBlocks.add(target.getAsBlocks());
+        }
+    }
+    public List<List<FluidStack>> getDisplayEnvFluids() {
+        if (this.displayEnvFluids == null) updateDisplayEnv();
+        return this.displayEnvFluids;
+    }
+    public List<List<ItemStack>> getDisplayEnvBlocks() {
+        if (this.displayEnvBlocks == null) updateDisplayEnv();
+        return this.displayEnvBlocks;
+    }
+    public List<ItemStack> getDisplayBlockBelow() {
+        if (this.blockExpectedBelow instanceof Ingredient.Whatever) return new ArrayList<>();
+        return this.blockExpectedBelow.getAsBlocks();
+    }
+    public List<ItemStack> getDisplayOutput() {
+        List<ItemStack> output = new ArrayList<>();
+        output.add(new ItemStack(BlockUtil.forceAsItem(this.blockToGenerate)));
+        return output;
+    }
 
     public boolean matchWorldAt(World worldIn, BlockPos pos, Fluid thisFluid, UponGeneration uponGeneration) {
         if (this.sourceFluid.match(() -> thisFluid, INVALID_BLOCK)) {

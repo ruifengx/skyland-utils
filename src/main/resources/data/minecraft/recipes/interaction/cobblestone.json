@@ -1,0 +1,8 @@
+{
+  "type": "skyland-utils:fluid_interation",
+  "consume": "minecraft:flowing_lava",
+  "env": [
+    {"fluid": "#skyland-utils:clear_fire"}
+  ],
+  "generate": "minecraft:cobblestone"
+}

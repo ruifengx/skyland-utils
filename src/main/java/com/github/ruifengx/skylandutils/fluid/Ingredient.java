@@ -1,16 +1,24 @@
 package com.github.ruifengx.skylandutils.fluid;
 
+import com.github.ruifengx.skylandutils.util.BlockUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -91,6 +99,8 @@ public interface Ingredient {
     }
 
     boolean match(Supplier<net.minecraft.fluid.Fluid> fluid, Supplier<net.minecraft.block.Block> block);
+    default List<FluidStack> getAsFluids() { throw new RuntimeException("cannot get as fluids"); }
+    default List<ItemStack> getAsBlocks() { throw new RuntimeException("cannot get as blocks"); }
     FlatStructure make_flat();
 
     static <T> ITag.INamedTag<T> getTagByName(List<? extends ITag.INamedTag<T>> tags, ResourceLocation name) {
@@ -114,6 +124,14 @@ public interface Ingredient {
         @Override public FlatStructure make_flat() {
             return FlatStructure.normal(true, false, fluid.getRegistryName().toString());
         }
+        private List<FluidStack> fluidStacks = null;
+        @Override public List<FluidStack> getAsFluids() {
+            if (this.fluidStacks == null) {
+                this.fluidStacks = new ArrayList<>();
+                this.fluidStacks.add(new FluidStack(this.fluid, 1000));
+            }
+            return this.fluidStacks;
+        }
         @Override public boolean match(Supplier<net.minecraft.fluid.Fluid> fluid,
                                        Supplier<net.minecraft.block.Block> block) {
             return fluid.get() == this.fluid;
@@ -129,6 +147,15 @@ public interface Ingredient {
         @Override public FlatStructure make_flat() {
             return FlatStructure.normal(true, true, fluidTag.getName().toString());
         }
+        private List<FluidStack> fluidStacks = null;
+        @Override public List<FluidStack> getAsFluids() {
+            if (this.fluidStacks == null) {
+                this.fluidStacks = new ArrayList<>();
+                for (net.minecraft.fluid.Fluid fluid : this.fluidTag.getValues())
+                    this.fluidStacks.add(new FluidStack(fluid, 1000));
+            }
+            return this.fluidStacks;
+        }
         @Override public boolean match(Supplier<net.minecraft.fluid.Fluid> fluid,
                                        Supplier<net.minecraft.block.Block> block) {
             return fluid.get().is(this.fluidTag);
@@ -141,6 +168,14 @@ public interface Ingredient {
         public Block(ResourceLocation block) { this(ForgeRegistries.BLOCKS.getValue(block)); }
         @Override public FlatStructure make_flat() {
             return FlatStructure.normal(false, false, block.getRegistryName().toString());
+        }
+        private List<ItemStack> blocks = null;
+        @Override public List<ItemStack> getAsBlocks() {
+            if (this.blocks == null) {
+                this.blocks = new ArrayList<>();
+                this.blocks.add(new ItemStack(BlockUtil.forceAsItem(this.block)));
+            }
+            return this.blocks;
         }
         @Override public boolean match(Supplier<net.minecraft.fluid.Fluid> fluid,
                                        Supplier<net.minecraft.block.Block> block) {
@@ -156,6 +191,15 @@ public interface Ingredient {
         }
         @Override public FlatStructure make_flat() {
             return FlatStructure.normal(false, true, blockTag.getName().toString());
+        }
+        private List<ItemStack> blocks = null;
+        @Override public List<ItemStack> getAsBlocks() {
+            if (this.blocks == null) {
+                this.blocks = new ArrayList<>();
+                for (net.minecraft.block.Block block : this.blockTag.getValues())
+                    this.blocks.add(new ItemStack(BlockUtil.forceAsItem(block)));
+            }
+            return this.blocks;
         }
         @Override public boolean match(Supplier<net.minecraft.fluid.Fluid> fluid,
                                        Supplier<net.minecraft.block.Block> block) {

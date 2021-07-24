@@ -3,5 +3,6 @@
   "skyland-utils.unknown_scalding_fluid": "未知流体",
   "death.attack.scalding": "%1$s试图在滚烫的%2$s里游泳",
   "death.attack.scalding.player": "%1$s在逃离%3$s时试图在滚烫的%2$s里游泳",
-  "block.skyland-utils.blaze_block": "烈焰块"
+  "block.skyland-utils.blaze_block": "烈焰块",
+  "jei.skyland-utils.interaction.title": "流体交互"
 }

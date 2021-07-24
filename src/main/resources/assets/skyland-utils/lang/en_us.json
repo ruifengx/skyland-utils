@@ -3,5 +3,6 @@
   "skyland-utils.unknown_scalding_fluid": "unknown scalding fluid",
   "death.attack.scalding": "%1$s tried to swim in %2$s",
   "death.attack.scalding.player": "%1$s tried to swim in %2$s to escape %3$s",
-  "block.skyland-utils.blaze_block": "Blaze Block"
+  "block.skyland-utils.blaze_block": "Blaze Block",
+  "jei.skyland-utils.interaction.title": "Fluid Interactions"
 }
