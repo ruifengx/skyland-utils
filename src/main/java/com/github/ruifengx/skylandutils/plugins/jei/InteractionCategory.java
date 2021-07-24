@@ -14,8 +14,6 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
@@ -26,7 +24,6 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -49,7 +46,7 @@ public class InteractionCategory implements IRecipeCategory<Interaction> {
 
     public InteractionCategory(IGuiHelper gui) {
         this.background = gui.createDrawable(LOC, 0, 0, 116, 64);
-        this.icon = gui.createDrawableIngredient(new ItemStack(Items.BUCKET));
+        this.icon = new Icon(gui);
         this.arrow = gui.drawableBuilder(LOC, 0, 64, 50, 17)
             .buildAnimated(80, IDrawableAnimated.StartDirection.LEFT, false);
         this.smallFluidEnv = gui.createDrawable(LOC, 50, 81, 14, 14);
