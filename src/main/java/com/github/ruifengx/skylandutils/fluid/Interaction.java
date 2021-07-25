@@ -7,10 +7,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
+import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -30,6 +29,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -116,6 +116,38 @@ public class Interaction implements IRecipe<IInventory> {
 
     static final Supplier<Fluid> INVALID_FLUID = () -> { throw new RuntimeException("unreachable"); };
     static final Supplier<Block> INVALID_BLOCK = () -> { throw new RuntimeException("unreachable"); };
+
+    private List<Ingredient> targetFluids;
+    private List<Ingredient> targetBlocks;
+    public Ingredient getSourceFluid() { return this.sourceFluid; }
+    public List<Ingredient> getTargetFluids() {
+        if (this.targetFluids == null)
+            this.targetFluids = this.target.stream()
+                .filter(ingredient -> ingredient instanceof Ingredient.Fluid
+                    || ingredient instanceof Ingredient.FluidTag)
+                .collect(Collectors.toList());
+        return this.targetFluids;
+    }
+    public List<Ingredient> getTargetBlocks() {
+        if (this.targetBlocks == null)
+            this.targetBlocks = this.target.stream()
+                .filter(ingredient -> ingredient instanceof Ingredient.Block
+                    || ingredient instanceof Ingredient.BlockTag)
+                .collect(Collectors.toList());
+        return this.targetBlocks;
+    }
+    public Ingredient getTargetFluid(int n) { return this.getTargetFluids().get(n); }
+    public Ingredient getTargetBlock(int n) { return this.getTargetBlocks().get(n); }
+    public Ingredient getBlockExpectedBelow() { return this.blockExpectedBelow; }
+    public Block getBlockToGenerate() { return this.blockToGenerate; }
+    public boolean consumesSource() {
+        return this.sourceFluid.getAsFluids().stream().allMatch(fluid ->
+            ((FlowingFluid) fluid.getFluid()).getSource() == fluid.getFluid());
+    }
+    public boolean mightConsumeSource() {
+        return this.sourceFluid.getAsFluids().stream().anyMatch(fluid ->
+            ((FlowingFluid) fluid.getFluid()).getSource() == fluid.getFluid());
+    }
 
     public List<FluidStack> getDisplaySourceFluid() { return this.sourceFluid.getAsFluids(); }
     @Nullable List<List<FluidStack>> displayFluidInputs = null;

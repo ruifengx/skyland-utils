@@ -1,22 +1,21 @@
 package com.github.ruifengx.skylandutils.fluid;
 
 import com.github.ruifengx.skylandutils.util.BlockUtil;
+import com.github.ruifengx.skylandutils.util.TranslationUtil;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +101,7 @@ public interface Ingredient {
     default List<FluidStack> getAsFluids() { throw new RuntimeException("cannot get as fluids"); }
     default List<ItemStack> getAsBlocks() { throw new RuntimeException("cannot get as blocks"); }
     FlatStructure make_flat();
+    default @Nullable ITextComponent getDisplayName() { return null; }
 
     static <T> ITag.INamedTag<T> getTagByName(List<? extends ITag.INamedTag<T>> tags, ResourceLocation name) {
         Optional<? extends ITag.INamedTag<T>> optTag = tags.stream()
@@ -160,6 +160,10 @@ public interface Ingredient {
                                        Supplier<net.minecraft.block.Block> block) {
             return fluid.get().is(this.fluidTag);
         }
+        @Override
+        public ITextComponent getDisplayName() {
+            return TranslationUtil.getTagDescription("fluid", this.fluidTag.getName());
+        }
     }
 
     class Block implements Ingredient {
@@ -200,6 +204,10 @@ public interface Ingredient {
                     this.blocks.add(new ItemStack(BlockUtil.forceAsItem(block)));
             }
             return this.blocks;
+        }
+        @Override
+        public ITextComponent getDisplayName() {
+            return TranslationUtil.getTagDescription("block", this.blockTag.getName());
         }
         @Override public boolean match(Supplier<net.minecraft.fluid.Fluid> fluid,
                                        Supplier<net.minecraft.block.Block> block) {

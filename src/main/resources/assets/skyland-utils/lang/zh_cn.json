@@ -4,5 +4,20 @@
   "death.attack.scalding": "%1$s试图在滚烫的%2$s里游泳",
   "death.attack.scalding.player": "%1$s在逃离%3$s时试图在滚烫的%2$s里游泳",
   "block.skyland-utils.blaze_block": "烈焰块",
-  "jei.skyland-utils.interaction.title": "流体交互"
+  "tag.fluid.minecraft.water": "水",
+  "tag.fluid.minecraft.lava": "熔岩",
+  "tag.fluid.skyland-utils.allow_swimming": "允许游泳",
+  "tag.fluid.skyland-utils.clear_fire": "熄灭火焰",
+  "tag.fluid.skyland-utils.igniting": "点燃实体",
+  "tag.fluid.skyland-utils.scalding": "滚烫",
+  "tag.fluid.skyland-utils.ultra_warm": "过热",
+  "tag.fluid.skyland-utils.vaporizing": "蒸发",
+  "jei.skyland-utils.interaction.title": "流体交互",
+  "jei.skyland-utils.gui.tooltip.fluid_tag": "流体标签：%1$s",
+  "jei.skyland-utils.gui.tooltip.block_tag": "方块标签：%1$s",
+  "jei.skyland-utils.gui.tooltip.consume_fluid_source": "消耗流体源",
+  "jei.skyland-utils.gui.tooltip.might_consume_fluid_source": "可能消耗流体源",
+  "jei.skyland-utils.gui.tooltip.env_fluid": "环境流体",
+  "jei.skyland-utils.gui.tooltip.below_block": "正下方的方块",
+  "jei.skyland-utils.gui.tooltip.env_block": "环境方块"
 }
