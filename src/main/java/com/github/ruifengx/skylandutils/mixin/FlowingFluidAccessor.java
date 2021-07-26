@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(FlowingFluid.class)
 public interface FlowingFluidAccessor {
-    @Invoker("getSlopeFindDistance")
-    int slopeFindDistance(IWorldReader worldIn);
+    @Invoker("getDropOff")
+    int dropOff(IWorldReader worldIn);
 }

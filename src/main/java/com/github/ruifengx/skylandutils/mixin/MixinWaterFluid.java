@@ -18,8 +18,8 @@ public abstract class MixinWaterFluid {
     @Shadow public abstract boolean isSame(Fluid fluidIn);
 
     @Inject(method = "canBeReplacedWith", at = @At("RETURN"), cancellable = true)
-    protected void canDisplace(FluidState toState, IBlockReader world, BlockPos toPos, Fluid fromFluid,
-                               Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    protected void canBeReplacedWith(FluidState toState, IBlockReader world, BlockPos toPos, Fluid fromFluid,
+                                     Direction direction, CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(direction == Direction.DOWN && !isSame(fromFluid)
             || FluidUtil.canBeReplacedWith(toState, world, toPos, direction));
     }

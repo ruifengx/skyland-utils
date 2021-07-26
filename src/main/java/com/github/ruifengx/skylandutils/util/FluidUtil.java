@@ -30,7 +30,7 @@ public final class FluidUtil {
 
     public static int getLevelDecreasePerBlock(FluidState fluidState, IWorldReader world) {
         if (fluidState.getType() instanceof FlowingFluid) {
-            return ((FlowingFluidAccessor) fluidState.getType()).slopeFindDistance(world);
+            return ((FlowingFluidAccessor) fluidState.getType()).dropOff(world);
         }
         return 1;
     }

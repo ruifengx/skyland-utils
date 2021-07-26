@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinLavaFluid {
     @Inject(method = "canBeReplacedWith", at = @At("HEAD"), cancellable = true)
     protected void canBeReplacedWith(FluidState toState, IBlockReader world, BlockPos toPos, Fluid fromFluid,
-                               Direction direction, CallbackInfoReturnable<Boolean> cir) {
+                                     Direction direction, CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(FluidUtil.canBeReplacedWith(toState, world, toPos, direction));
     }
 }
