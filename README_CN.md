@@ -23,11 +23,11 @@
 - [x] 可自定义的流体反应
     - [x] 血 → 烈焰血 ⇒ 下界岩
     - [x] 冷流体 → 烈焰血（流体源） ⇒ 烈焰块
-    - [x] 可使用配方类型`skyland-utils:fluid_interation`来自定义
+    - [x] 可使用配方类型`skyland-utils:fluid_interaction`来自定义
 
 ## JEI 屏幕截图
 
-空岛使用拓展提供了对 JEI 的基本支持，下面是一些屏幕截图：
+空岛使用拓展提供了对 [Just Enough Items (JEI)](https://github.com/mezz/JustEnoughItems) 的基本支持，下面是一些屏幕截图：
 
 | 圆石 | 烈焰块 |
 |---|-------|

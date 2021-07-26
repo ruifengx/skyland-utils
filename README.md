@@ -23,11 +23,11 @@ and [Tinker's Construct 3](https://github.com/SlimeKnights/TinkersConstruct).
 - [x] Customizable fluid interactions
     - [x] Blood → Blazing blood ⇒ Netherrack
     - [x] Cool fluid → Blazing blood (Source) ⇒ Blaze Block
-    - [x] Customizable as recipe type `skyland-utils:fluid_interation`
+    - [x] Customizable as recipe type `skyland-utils:fluid_interaction`
 
 ## JEI Screenshots
 
-Skyland Utils support JEI, below are some screenshots.
+Skyland Utils support [Just Enough Items (JEI)](https://github.com/mezz/JustEnoughItems), below are some screenshots.
 
 | Cobblestone | Blaze Block |
 |---|-------|
