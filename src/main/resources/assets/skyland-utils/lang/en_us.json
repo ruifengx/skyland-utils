@@ -19,5 +19,10 @@
   "jei.skyland-utils.gui.tooltip.might_consume_fluid_source": "Might consume fluid source",
   "jei.skyland-utils.gui.tooltip.env_fluid": "Environment fluid",
   "jei.skyland-utils.gui.tooltip.below_block": "Block below",
-  "jei.skyland-utils.gui.tooltip.env_block": "Environment block"
+  "jei.skyland-utils.gui.tooltip.env_block": "Environment block",
+  "skyland-utils.tick_warp.start": "Warp speed ...",
+  "skyland-utils.tick_warp.in_progress": "%1%s is already advancing time at the moment. Try later or ask them.",
+  "skyland-utils.tick_warp.not_in_progress": "No warp in progress.",
+  "skyland-utils.tick_warp.interrupted": "Warp interrupted.",
+  "skyland-utils.tick_warp.success_message": "... Time warp completed with %1$d TPS, or %2$f MSPT."
 }

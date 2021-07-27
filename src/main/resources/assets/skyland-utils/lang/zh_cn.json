@@ -19,5 +19,10 @@
   "jei.skyland-utils.gui.tooltip.might_consume_fluid_source": "可能消耗流体源",
   "jei.skyland-utils.gui.tooltip.env_fluid": "环境流体",
   "jei.skyland-utils.gui.tooltip.below_block": "正下方的方块",
-  "jei.skyland-utils.gui.tooltip.env_block": "环境方块"
+  "jei.skyland-utils.gui.tooltip.env_block": "环境方块",
+  "skyland-utils.tick_warp.start": "开始加速跳过时间……",
+  "skyland-utils.tick_warp.in_progress": "当前%1%s已开始跳过时间。请过一会再试或和他们联系。",
+  "skyland-utils.tick_warp.not_in_progress": "当前并没有加速跳过时间。",
+  "skyland-utils.tick_warp.interrupted": "时间加速中止。",
+  "skyland-utils.tick_warp.success_message": "……加速跳过时间结束，平均刻速率为%1$s TPS，或%2$f MSPT。"
 }

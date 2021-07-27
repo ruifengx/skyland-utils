@@ -26,7 +26,7 @@ public class ScaldingDamage extends DamageSource {
         final String msgIdPlayer = msgIdRaw + ".player";
         final ResourceLocation fluidRegName = this.sourceFluid.getRegistryName();
         final ITextComponent fluidName = new TranslationTextComponent(fluidRegName == null
-            ? SkylandUtils.MODID + ".unknown_scalding_fluid"
+            ? SkylandUtils.getTranslationId("unknown_scalding_fluid")
             : Util.makeDescriptionId("fluid", this.sourceFluid.getRegistryName()));
         if (livingentity != null) {
             return new TranslationTextComponent(msgIdPlayer,

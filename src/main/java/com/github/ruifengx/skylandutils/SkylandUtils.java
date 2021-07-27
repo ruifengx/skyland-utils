@@ -1,13 +1,16 @@
 package com.github.ruifengx.skylandutils;
 
 import com.github.ruifengx.skylandutils.block.SkylandBlocks;
+import com.github.ruifengx.skylandutils.carpet.TickCommand;
 import com.github.ruifengx.skylandutils.fluid.AllFluidTags;
 import com.github.ruifengx.skylandutils.fluid.Interaction;
 import com.github.ruifengx.skylandutils.item.AllItemTags;
 import com.github.ruifengx.skylandutils.item.SkylandItemGroups;
 import com.github.ruifengx.skylandutils.util.FluidUtil;
+import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.command.CommandSource;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -15,6 +18,8 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
@@ -59,10 +64,20 @@ public class SkylandUtils {
     public static ResourceLocation getResource(String name) {
         return new ResourceLocation(MODID, name);
     }
+    public static String getTranslationId(String about) { return MODID + "." + about; }
+    public static ITextComponent getTranslation(String about, Object... args) {
+        return new TranslationTextComponent(getTranslationId(about), args);
+    }
 
     @SubscribeEvent
     public void onTagsUpdated(final TagsUpdatedEvent event) {
         FluidUtil.registerAllBuckets();
+    }
+
+    @SubscribeEvent
+    public void onServerStarting(FMLServerStartingEvent event) {
+        CommandDispatcher<CommandSource> dispatcher = event.getServer().getCommands().getDispatcher();
+        TickCommand.register(dispatcher);
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class
